@@ -30,10 +30,15 @@ public class AddBookServlet extends HttpServlet {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/BOOKSHELF", "root", "");
-            Statement statement = connection.createStatement();
-            String query ="Insert into book values('"+isbn+"','"+name+"','"+price+"','"+author+"');";
-            statement.executeUpdate(query);
-            statement.close();
+            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO book VALUES(?, ?, ?, ?)");
+
+            pstmt.setInt(1, isbn);
+            pstmt.setString(2, name);
+            pstmt.setDouble(3, price);
+            pstmt.setString(4, author);
+
+            pstmt.executeUpdate();
+            pstmt.close();
             connection.close();
 
         } catch (SQLException e) {
