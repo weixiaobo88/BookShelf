@@ -5,4 +5,15 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
+    <servlet>
+        <servlet-name>add-book</servlet-name>
+        <servlet-class>linne.AddBookServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>add-book</servlet-name>
+        <url-pattern>/add</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
