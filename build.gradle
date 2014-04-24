@@ -9,4 +9,5 @@ repositories {
 
 dependencies {
     providedCompile 'javax.servlet:servlet-api:2.5'
+    compile 'mysql:mysql-connector-java:5.1.20'
 }
