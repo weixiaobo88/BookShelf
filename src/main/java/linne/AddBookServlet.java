@@ -1,11 +1,15 @@
 package linne;
 
+import org.apache.commons.dbcp.BasicDataSource;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class AddBookServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -27,25 +31,31 @@ public class AddBookServlet extends HttpServlet {
         double price = Double.parseDouble(request.getParameter("price"));
         String author = request.getParameter("author");
 
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/BOOKSHELF");
+        dataSource.setUsername("root");
+        dataSource.setPassword("");
+
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/BOOKSHELF", "root", "");
-            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO book VALUES(?, ?, ?, ?)");
+            conn = dataSource.getConnection();
+            stmt = conn.prepareStatement("INSERT INTO book VALUES(?, ?, ?, ?)");
+            stmt.setInt(1, isbn);
+            stmt.setString(2, name);
+            stmt.setDouble(3, price);
+            stmt.setString(4, author);
 
-            pstmt.setInt(1, isbn);
-            pstmt.setString(2, name);
-            pstmt.setDouble(3, price);
-            pstmt.setString(4, author);
-
-            pstmt.executeUpdate();
-            pstmt.close();
-            connection.close();
-
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
+
 
         System.out.println(isbn);
         System.out.println(name);
