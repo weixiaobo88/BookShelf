@@ -1,0 +1,40 @@
+//apply plugin: 'war'
+//apply plugin: 'jetty'
+//
+////plugin 继承关系java - war - jetty
+//
+//
+//repositories {
+//    mavenCentral()
+//}
+//
+//dependencies {
+//    compile project('core')       //这个依赖不是task上的依赖
+//    providedCompile 'javax.servlet:servlet-api:2.5'
+//    compile 'mysql:mysql-connector-java:5.1.20'
+//    compile 'commons-dbcp:commons-dbcp:1.4'
+////和task的compile不一样，这里的compile是configuration（依赖单元）, testcompile也是，会被compile的task引用
+////    每个configuration都有一个aspath方法
+//
+////plugin java 的作用
+////    tasks
+////    整个项目里引入了两个sourcesets: main /test
+////    compile编译后 testcompile继承自compile，打包的时候也要放在war包里
+////    ProvidedCompile 比如servlet api， 打包的时候不放在war包里，对于服务器已经提供的jar就使用providedCompile
+//
+//}
+//
+//configurations {
+//    ffsfs //会作为一个名字来放进configuration 的容器中
+//}
+//
+//task pritnCon << {
+//    println configurations.compile.asPath
+//}
+//
+////
+////gradle
+////   |_ configuration container
+//
+////gradle 执行task的时候会去寻找所有工程里面的task
+////顺序？默认情况下：按照字母顺序；如果有依赖关系，先执行

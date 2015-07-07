@@ -1,14 +1,13 @@
 package linne;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import db.DBConnection;
+import db.DBOperate;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class AddBookServlet extends HttpServlet {
@@ -21,7 +20,6 @@ public class AddBookServlet extends HttpServlet {
                 "  author: <input type=\"text\" name=\"author\">\n" +
                 "  <input type=\"submit\" value=\"Submit form \"/>\n" +
                 "  </form>");
-
     }
 
     @Override
@@ -30,37 +28,20 @@ public class AddBookServlet extends HttpServlet {
         String name = request.getParameter("name");
         double price = Double.parseDouble(request.getParameter("price"));
         String author = request.getParameter("author");
-
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/BOOKSHELF");
-        dataSource.setUsername("root");
-        dataSource.setPassword("");
+        DBOperate dbOperate = new DBOperate();
 
         try {
-            conn = dataSource.getConnection();
-            stmt = conn.prepareStatement("INSERT INTO book VALUES(?, ?, ?, ?)");
-            stmt.setInt(1, isbn);
-            stmt.setString(2, name);
-            stmt.setDouble(3, price);
-            stmt.setString(4, author);
-
-            stmt.executeUpdate();
-            stmt.close();
-            conn.close();
+            dbOperate.addBook(isbn, name, price, author);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
         }
-
 
         System.out.println(isbn);
         System.out.println(name);
         System.out.println(price);
         System.out.println(author);
-
     }
+
 }
